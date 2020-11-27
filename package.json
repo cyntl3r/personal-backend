@@ -1,0 +1,31 @@
+{
+  "name": "personal-backend",
+  "version": "1.0.0",
+  "description": "GraphQL API for my personal website.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyntl3r/personal-backend.git"
+  },
+  "author": "cyntl3r",
+  "license": "MIT",
+  "scripts": {
+    "start:development": "nodemon",
+    "start:production": "node ./dist/index.js",
+    "build": "tsc",
+    "prettier": "prettier --write ."
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6",
+    "prettier": "^2.2.0",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "@types/mongoose": "^5.10.1",
+    "@types/node": "^14.14.10",
+    "apollo-server": "^2.19.0",
+    "graphql": "^15.4.0",
+    "mongoose": "^5.10.16"
+  }
+}
