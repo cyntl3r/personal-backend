@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: personal-backend
+    volumes:
+      - personal-backend-mongo-data:/data/db
+  app:
+    build: ./
+    ports:
+      - 3001:3001
+    env_file: ./.env
+    depends_on:
+      - mongo
+    volumes:
+      - ./:/app
+    command: npm run start:production
+volumes:
+  personal-backend-mongo-data:
