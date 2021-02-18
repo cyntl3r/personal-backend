@@ -1,33 +1,41 @@
+/**
+ * @name personal-backend
+ * @author cyntler <damian@cyntler.com>
+ */
+import { join } from 'path';
 import { ApolloServer, gql } from 'apollo-server';
-import mongoose from 'mongoose';
+import { config } from 'dotenv';
+import { PrismaClient } from '@prisma/client';
+
+config({
+  path: join(__dirname, '../.env'),
+});
+
+const port = process.env.APP_PORT || 4000;
+const prisma = new PrismaClient();
 
 const typeDefs = gql`
+  type Post {
+    title: String!
+    content: String
+  }
+
   type Query {
-    hello: String
+    posts: [Post!]!
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => 'world',
+    posts: () => prisma.post.findMany(),
   },
 };
 
-(async () => {
-  await mongoose.connect(process.env.APP_MONGO_DB_URI, {
-    useNewUrlParser: true,
-  });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-  });
-
-  server
-    .listen({
-      port: process.env.APP_PORT || 4000,
-    })
-    .then(({ url }) => {
-      console.log(`🚀 Server ready at ${url}`);
-    });
-})();
+server.listen({
+  port,
+});
