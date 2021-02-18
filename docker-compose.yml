@@ -1,23 +1,24 @@
 version: '3.8'
 services:
-  mongo:
-    image: mongo
+  postgres:
+    image: postgres
+    restart: always
     ports:
-      - 27017:27017
+      - 5432:5432
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: personal-backend
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: personal-backend
     volumes:
-      - mongo-data:/data/db
+      - postgres-data:/var/lib/postgresql/data
   app:
     build: ./
     ports:
       - 3001:3001
     depends_on:
-      - mongo
+      - postgres
     volumes:
       - ./:/app
     command: npm run start
 volumes:
-  mongo-data:
+  postgres-data:
