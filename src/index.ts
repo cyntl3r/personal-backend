@@ -14,8 +14,6 @@ config({
 const port = process.env.APP_PORT || 4000;
 const prisma = new PrismaClient();
 
-console.log(prisma);
-
 const typeDefs = gql`
   type Post {
     title: String!
