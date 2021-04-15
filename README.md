@@ -1,3 +1,3 @@
 # personal-backend
 
-GraphQL API for my personal website.
+REST API for my personal website.
