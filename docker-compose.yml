@@ -1,24 +1,33 @@
-version: '3.8'
+version: '3'
+
 services:
-  postgres:
-    image: postgres
-    restart: always
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: personal-backend
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-  app:
+  application:
     build: ./
-    ports:
-      - 3001:3001
+    container_name: personal-backend
+    expose:
+      - 3001
     depends_on:
-      - postgres
+      - mongo
     volumes:
       - ./:/app
     command: npm run start
+
+  database:
+    image: mongo
+    container_name: personal-backend-database
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: database
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo-data:/data/db
+
 volumes:
-  postgres-data:
+  mongo-data:
+
+networks:
+  proxy:
+    external:
+      name: nginx-proxy
