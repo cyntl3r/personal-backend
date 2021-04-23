@@ -2,40 +2,27 @@
  * @name personal-backend
  * @author cyntler <damian@cyntler.com>
  */
-import { join } from 'path';
-import { ApolloServer, gql } from 'apollo-server';
-import { config } from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+import './utils/configEnv';
+import express from 'express';
+import { connect as mongooseConnect } from 'mongoose';
+import { bio } from './controllers/bio';
 
-config({
-  path: join(__dirname, '../.env'),
-});
+const port = process.env.APP_PORT;
 
-const port = process.env.APP_PORT || 4000;
-const prisma = new PrismaClient();
+(async () => {
+  try {
+    await mongooseConnect(process.env.APP_MONGO_URI, {
+      useNewUrlParser: true,
+    });
 
-const typeDefs = gql`
-  type Post {
-    title: String!
-    content: String
+    const app = express();
+
+    app.get('/bio', bio);
+
+    app.listen(port, () => {
+      console.log(`App listening at http://localhost:${port}`);
+    });
+  } catch (err) {
+    console.error(err);
   }
-
-  type Query {
-    posts: [Post!]!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    posts: () => prisma.post.findMany(),
-  },
-};
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
-
-server.listen({
-  port,
-});
+})();
